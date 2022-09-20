@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">FullStory</string>
+    <string name="user_id_hint">User ID</string>
+    <string name="identify_user">Identify User</string>
+
+    <string name="track_event">Track Event</string>
+    <string name="track_event_data">Track Event with Data</string>
+</resources>

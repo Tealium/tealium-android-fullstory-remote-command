@@ -1,0 +1,23 @@
+import org.gradle.api.initialization.resolve.RepositoriesMode
+
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+
+        maven { url "https://maven.tealiumiq.com/android/releases/" }
+        maven { url "https://maven.fullstory.com" }
+    }
+}
+rootProject.name = "FullStory"
+include ':app'
+include ':fullstory'
