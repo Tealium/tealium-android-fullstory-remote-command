@@ -7,9 +7,6 @@ object Commands {
     const val LOG_EVENT = "logevent"
     const val IDENTIFY = "identify"
     const val SET_USER_VARIABLES = "setuservariables"
-    const val ANONYMIZE = "anonymize"
-    const val RESTART = "restart"
-    const val SHUTDOWN = "shutdown"
 }
 
 object Keys {

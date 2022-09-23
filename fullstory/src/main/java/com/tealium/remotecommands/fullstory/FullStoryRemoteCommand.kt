@@ -34,15 +34,6 @@ class FullStoryRemoteCommand(
                 Commands.LOG_EVENT -> {
                     logEvent(payload)
                 }
-                Commands.ANONYMIZE -> {
-                    fullStoryInstance.anonymize()
-                }
-                Commands.RESTART -> {
-                    fullStoryInstance.restart()
-                }
-                Commands.SHUTDOWN -> {
-                    fullStoryInstance.shutdown()
-                }
             }
         }
     }
