@@ -34,6 +34,9 @@ class FullStoryRemoteCommand(
                 Commands.LOG_EVENT -> {
                     logEvent(payload)
                 }
+                Commands.FETCH_SESSION_URL -> {
+                    fullStoryInstance.fetchSessionUrl()
+                }
             }
         }
     }

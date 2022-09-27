@@ -7,6 +7,7 @@ object Commands {
     const val LOG_EVENT = "logevent"
     const val IDENTIFY = "identify"
     const val SET_USER_VARIABLES = "setuservariables"
+    const val FETCH_SESSION_URL = "fetchsessionurl"
 }
 
 object Keys {
