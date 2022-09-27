@@ -19,22 +19,7 @@ class FullStoryInstance(private val remoteCommandContext: RemoteCommandContext) 
         FS.setUserVars(data)
     }
 
-    override fun anonymize() {
-        FS.anonymize()
-    }
-
-    override fun shutdown() {
-        FS.shutdown()
-    }
-
-    override fun restart() {
-        FS.restart()
-    }
-
-    private val fullstoryOnReadyListener = FSOnReadyListener  {
-        FSOnReadyListener {
-            // track current session url
-            remoteCommandContext.track("fullstory_session_url", mapOf("session_url" to it.currentSessionURL))
-        }
+    override fun fetchSessionUrl() {
+        remoteCommandContext.track("fullstory_session_url", mapOf("session_url" to FS.getCurrentSessionURL()))
     }
 }
