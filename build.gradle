@@ -17,7 +17,7 @@ plugins {
 
 ext {
     tealiumFullstoryVersion =  "1.0.0"
-    fullstoryVersion = "1.30.0"
+    fullstoryVersion = "[1.30, 2.0)"
     mockk_version = "1.12.8"
 }
 
