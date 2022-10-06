@@ -18,8 +18,4 @@ class FullStoryInstance(private val remoteCommandContext: RemoteCommandContext) 
     override fun setUserData(data: Map<String, Any>) {
         FS.setUserVars(data)
     }
-
-    override fun fetchSessionUrl() {
-        remoteCommandContext.track("fullstory_session_url", mapOf("session_url" to FS.getCurrentSessionURL()))
-    }
 }

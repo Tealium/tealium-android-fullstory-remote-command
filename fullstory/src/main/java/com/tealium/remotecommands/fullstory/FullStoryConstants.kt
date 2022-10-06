@@ -7,13 +7,11 @@ object Commands {
     const val LOG_EVENT = "logevent"
     const val IDENTIFY = "identify"
     const val SET_USER_VARIABLES = "setuservariables"
-    const val FETCH_SESSION_URL = "fetchsessionurl"
 }
 
 object Keys {
     const val EVENT_NAME = "event_name"
     const val EVENT_PROPERTIES = "event"
-    const val EVENT_PARAMETERS = "event_parameters"
 
     const val UID = "uid"
     const val USER_VARIABLES = "user_variables"

@@ -5,5 +5,4 @@ interface FullStoryCommand {
     fun setUserData(data: Map<String, Any>)
 
     fun logEvent(eventName: String, eventData: Map<String, Any>? = null)
-    fun fetchSessionUrl()
 }
