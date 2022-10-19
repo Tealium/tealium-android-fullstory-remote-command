@@ -1,5 +1,6 @@
 package com.tealium.remotecommands.fullstory
 
+import android.util.Log
 import com.tealium.remotecommands.RemoteCommand
 import com.tealium.remotecommands.RemoteCommandContext
 import org.json.JSONObject
@@ -10,10 +11,7 @@ class FullStoryRemoteCommand(
     commandDescription: String = DEFAULT_COMMAND_DESCRIPTION
 ) : RemoteCommand(commandId, commandDescription, BuildConfig.TEALIUM_FULLSTORY_VERSION) {
 
-    lateinit var fullStoryInstance: FullStoryCommand
-
-    private val TAG = this::class.java.simpleName
-
+    val fullStoryInstance: FullStoryCommand = FullStoryInstance()
 
     override fun onInvoke(response: Response) {
         val payload = response.requestPayload
@@ -23,7 +21,7 @@ class FullStoryRemoteCommand(
 
     fun parseCommands(commands: Array<String>, payload: JSONObject) {
         commands.forEach { command ->
-            println("Executing command: $command")
+            Log.d(BuildConfig.TAG, "Processing command: $command")
             when (command) {
                 Commands.IDENTIFY -> {
                     identify(payload)
@@ -42,9 +40,7 @@ class FullStoryRemoteCommand(
         val uid: String = json.optString(Keys.UID)
         val userData = json.optJSONObject(Keys.USER_VARIABLES)
         if (uid.isNotBlank()) {
-            userData?.let {
-                fullStoryInstance.identifyUser(uid,it.toTypedMap())
-            } ?: fullStoryInstance.identifyUser(uid)
+            fullStoryInstance.identifyUser(uid, userData?.toTypedMap())
         }
     }
 
@@ -58,9 +54,7 @@ class FullStoryRemoteCommand(
     private fun logEvent(json: JSONObject) {
         val eventName = json.optString(Keys.EVENT_NAME)
         val eventData = json.optJSONObject(Keys.EVENT_PROPERTIES)
-        eventData?.let {
-            fullStoryInstance.logEvent(eventName, it.toTypedMap())
-        } ?: fullStoryInstance.logEvent(eventName)
+        fullStoryInstance.logEvent(eventName, eventData?.toTypedMap())
     }
 
     private inline fun <reified T> JSONObject.toTypedMap(): Map<String, T> {
@@ -79,12 +73,6 @@ class FullStoryRemoteCommand(
         return command.split(Commands.SEPARATOR).map {
             it.trim().lowercase()
         }.toTypedArray()
-    }
-
-    override fun setContext(context: RemoteCommandContext?) {
-        context?.let {
-            fullStoryInstance = FullStoryInstance(it)
-        }
     }
 
     companion object {
