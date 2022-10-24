@@ -2,9 +2,8 @@ package com.tealium.remotecommands.fullstory
 
 import android.util.Log
 import com.tealium.remotecommands.RemoteCommand
-import com.tealium.remotecommands.RemoteCommandContext
+import org.json.JSONArray
 import org.json.JSONObject
-import java.util.*
 
 class FullStoryRemoteCommand(
     commandId: String = DEFAULT_COMMAND_ID,
@@ -21,7 +20,7 @@ class FullStoryRemoteCommand(
 
     fun parseCommands(commands: Array<String>, payload: JSONObject) {
         commands.forEach { command ->
-            Log.d(BuildConfig.TAG, "Processing command: $command")
+            Log.d(BuildConfig.TAG, "Processing command: $command with payload: $payload")
             when (command) {
                 Commands.IDENTIFY -> {
                     identify(payload)
@@ -40,32 +39,62 @@ class FullStoryRemoteCommand(
         val uid: String = json.optString(Keys.UID)
         val userData = json.optJSONObject(Keys.USER_VARIABLES)
         if (uid.isNotBlank()) {
-            fullStoryInstance.identifyUser(uid, userData?.toTypedMap())
+            fullStoryInstance.identifyUser(uid, userData?.convertToMap())
         }
     }
 
     private fun setUserVariables(json: JSONObject) {
         val userData = json.optJSONObject(Keys.USER_VARIABLES)
         userData?.let {
-            fullStoryInstance.setUserData(it.toTypedMap())
+            fullStoryInstance.setUserData(it.convertToMap())
         }
     }
 
     private fun logEvent(json: JSONObject) {
         val eventName = json.optString(Keys.EVENT_NAME)
         val eventData = json.optJSONObject(Keys.EVENT_PROPERTIES)
-        fullStoryInstance.logEvent(eventName, eventData?.toTypedMap())
+        fullStoryInstance.logEvent(eventName, eventData?.convertToMap())
     }
 
-    private inline fun <reified T> JSONObject.toTypedMap(): Map<String, T> {
-        val map = HashMap<String, T>()
-        keys().forEach { key ->
-            val value = this[key]
-            (value as? T)?.let {
-                map[key] = value
+    private fun JSONObject.convertToMap(): Map<String, Any> {
+        val map = mutableMapOf<String, Any>()
+        val iterator = keys()
+        while (iterator.hasNext()) {
+            val key = iterator.next()
+            when (val value = this[key]) {
+                is JSONObject -> {
+                    map[key] = value.convertToMap()
+                }
+                is JSONArray -> {
+                    map[key] = value.convertToList()
+                }
+                else -> {
+                    map[key] = value
+                }
             }
         }
-        return map
+        return map.toMap()
+    }
+
+    private fun JSONArray.convertToList(): List<Any> {
+        val list = mutableListOf<Any>()
+        for (i in 0 until length()) {
+            when (val value = this[i]) {
+                is JSONObject -> {
+                    list.add(value.convertToMap())
+                }
+                is JSONArray -> {
+                    list.add(value.convertToList())
+                }
+                is Boolean, is Int, is Double, is String -> {
+                    list.add(value)
+                }
+                else -> {
+                    list.add(value.toString())
+                }
+            }
+        }
+        return list.toList()
     }
 
     internal fun splitCommands(payload: JSONObject): Array<String> {

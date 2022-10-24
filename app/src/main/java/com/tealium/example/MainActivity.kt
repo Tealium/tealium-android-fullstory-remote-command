@@ -11,7 +11,7 @@ class MainActivity : AppCompatActivity() {
 
         identifyUserButton.setOnClickListener {
             val text: String = userIdEditText.text.toString()
-            TealiumHelper.trackEvent("identify", mapOf("uid" to text))
+            TealiumHelper.trackEvent("identify_user", mapOf("uid" to text, "email" to "sample@domain.com", "phone" to "9999999999"))
         }
 
         trackEventButton.setOnClickListener {
@@ -19,7 +19,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         trackEventWithDataButton.setOnClickListener {
-            TealiumHelper.trackEvent("tealiumSampleEventWithData", mapOf("sampleKey1" to "sampleValue1", "sampleKey2" to "sampleValue2"))
+            TealiumHelper.trackEvent(
+                "tealiumSampleEventWithData",
+                mapOf("cart_id" to "12345", "product_id" to "54321", "price" to 5.99, "name" to "SampleEvent", "category" to mapOf("label" to "misc"))
+            )
         }
     }
 }
