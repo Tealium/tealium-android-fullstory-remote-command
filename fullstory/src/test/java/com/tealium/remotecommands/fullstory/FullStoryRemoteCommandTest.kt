@@ -20,9 +20,7 @@ class FullStoryRemoteCommandTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this, relaxUnitFun = true)
-        fullStoryRemoteCommand = FullStoryRemoteCommand()
-
-        fullStoryRemoteCommand.fullStoryInstance = mockFullStoryInstance
+        fullStoryRemoteCommand = FullStoryRemoteCommand(fullStoryInstance =  mockFullStoryInstance)
     }
 
     @Test

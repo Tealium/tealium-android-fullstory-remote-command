@@ -6,11 +6,10 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 class FullStoryRemoteCommand(
+    private val fullStoryInstance: FullStoryCommand = FullStoryInstance(),
     commandId: String = DEFAULT_COMMAND_ID,
     commandDescription: String = DEFAULT_COMMAND_DESCRIPTION
 ) : RemoteCommand(commandId, commandDescription, BuildConfig.TEALIUM_FULLSTORY_VERSION) {
-
-    val fullStoryInstance: FullStoryCommand = FullStoryInstance()
 
     override fun onInvoke(response: Response) {
         val payload = response.requestPayload
