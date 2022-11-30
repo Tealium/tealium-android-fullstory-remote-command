@@ -1,0 +1,78 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-android-extensions'
+    id 'fullstory'
+}
+
+Properties properties = new Properties()
+if (project.rootProject.file('local.properties').canRead()) {
+    properties.load(project.rootProject.file("local.properties").newDataInputStream())
+}
+
+fullstory {
+    // add your "org" in local.properties, or set it here directly
+    org properties.getProperty('org')
+    if (org == null) throw new GradleException('ORG ID is empty, will not record! Please set org in build.gradle(app) or local.properties!')
+
+    if (properties.getProperty('enabledVariants') != null) {
+        enabledVariants properties.getProperty('enabledVariants')
+    }
+
+    if (properties.getProperty('logLevel') != null) {
+        logLevel properties.getProperty('logLevel')
+    }
+
+    if (properties.getProperty('logcatLevel') != null) {
+        logcatLevel properties.getProperty('logcatLevel')
+    }
+
+    if (properties.getProperty('recordOnStart') != null) {
+        recordOnStart properties.getProperty('recordOnStart')
+    }
+}
+
+android {
+    compileSdk 32
+
+    defaultConfig {
+        applicationId "com.tealium.example"
+        minSdk 21
+        targetSdk 32
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.5.0'
+    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation project(":fullstory")
+
+    // Tealium
+    implementation "com.tealium:kotlin-remotecommand-dispatcher:1.1.1"
+    implementation "com.tealium:kotlin-tagmanagement-dispatcher:1.1.2"
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+}
