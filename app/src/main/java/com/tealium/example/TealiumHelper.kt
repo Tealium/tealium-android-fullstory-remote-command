@@ -21,15 +21,12 @@ object TealiumHelper {
             dispatchers = mutableSetOf(
                 Dispatchers.RemoteCommands
             )
-        ).apply {
-            deepLinkTrackingEnabled = false
-            qrTraceEnabled = false
-        }
+        )
 
         Tealium.create(INSTANCE, config) {
 
             val fullstoryCommand = FullStoryRemoteCommand()
-            remoteCommands?.add(fullstoryCommand, filename = "fullstory.json")
+            remoteCommands?.add(fullstoryCommand, filename = "tealium-fullstory.json")
         }
     }
 

@@ -1,6 +1,7 @@
 {
   "config": {},
   "mappings": {
+    "tealium_event": "event_name",
     "uid": "uid_str",
     "email": "user_variables.email_str",
     "phone": "user_variables.phone_str",
