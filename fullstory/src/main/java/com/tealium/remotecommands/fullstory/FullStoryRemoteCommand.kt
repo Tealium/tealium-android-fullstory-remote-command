@@ -21,15 +21,15 @@ class FullStoryRemoteCommand(
         commands.forEach { command ->
             Log.d(BuildConfig.TAG, "Processing command: $command with payload: $payload")
             when (command) {
-                Commands.IDENTIFY -> {
-                    identify(payload)
-                }
-                Commands.SET_USER_VARIABLES -> {
-                    setUserVariables(payload)
-                }
-                Commands.LOG_EVENT -> {
-                    logEvent(payload)
-                }
+                Commands.IDENTIFY -> identify(payload)
+                Commands.SET_USER_VARIABLES -> setUserVariables(payload)
+                Commands.LOG_EVENT -> logEvent(payload)
+                Commands.SHUTDOWN -> fullStoryInstance.shutdown()
+                Commands.RESTART -> fullStoryInstance.restart()
+                Commands.ANONYMIZE -> fullStoryInstance.anonymize()
+                Commands.CONSENT -> consent(payload)
+                Commands.RESET_IDLE_TIMER -> fullStoryInstance.resetIdleTimer()
+                Commands.LOG -> log(payload)
             }
         }
     }
@@ -51,8 +51,20 @@ class FullStoryRemoteCommand(
 
     private fun logEvent(json: JSONObject) {
         val eventName = json.optString(Keys.EVENT_NAME)
-        val eventData = json.optJSONObject(Keys.EVENT_PROPERTIES)
-        fullStoryInstance.logEvent(eventName, eventData?.convertToMap())
+        if (eventName.isBlank()) return
+        val eventData = json.optJSONObject(Keys.EVENT_PROPERTIES)?.convertToMap() ?: emptyMap<String, Any>()
+        fullStoryInstance.logEvent(eventName, eventData)
+    }
+
+    private fun consent(json: JSONObject) {
+        val consentGranted = json.opt(Keys.CONSENT_GRANTED) as? Boolean ?: return
+        fullStoryInstance.consent(consentGranted)
+    }
+
+    private fun log(json: JSONObject) {
+        val level = json.optString(Keys.LOG_LEVEL).toFSLogLevel() ?: return
+        val message = json.optString(Keys.LOG_MESSAGE).takeIf { it.isNotBlank() } ?: return
+        fullStoryInstance.log(level, message)
     }
 
     private fun JSONObject.convertToMap(): Map<String, Any> {

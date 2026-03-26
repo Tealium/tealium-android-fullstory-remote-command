@@ -14,4 +14,28 @@ class FullStoryInstance : FullStoryCommand {
     override fun setUserData(data: Map<String, Any>) {
         FS.setUserVars(data)
     }
+
+    override fun anonymize() {
+        FS.anonymize()
+    }
+
+    override fun shutdown() {
+        FS.shutdown()
+    }
+
+    override fun restart() {
+        FS.restart()
+    }
+
+    override fun consent(userConsents: Boolean) {
+        FS.consent(userConsents)
+    }
+
+    override fun resetIdleTimer() {
+        FS.resetIdleTimer()
+    }
+
+    override fun log(logLevel: FS.LogLevel, message: String) {
+        FS.log(logLevel, message)
+    }
 }
