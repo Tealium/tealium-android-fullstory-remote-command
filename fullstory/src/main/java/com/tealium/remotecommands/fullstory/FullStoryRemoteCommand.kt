@@ -2,6 +2,7 @@ package com.tealium.remotecommands.fullstory
 
 import android.util.Log
 import com.tealium.remotecommands.RemoteCommand
+import java.util.Locale
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -30,6 +31,7 @@ class FullStoryRemoteCommand(
                 Commands.CONSENT -> consent(payload)
                 Commands.RESET_IDLE_TIMER -> fullStoryInstance.resetIdleTimer()
                 Commands.LOG -> log(payload)
+                else -> Log.w(BuildConfig.TAG, "Unknown command: $command")
             }
         }
     }
@@ -52,7 +54,7 @@ class FullStoryRemoteCommand(
     private fun logEvent(json: JSONObject) {
         val eventName = json.optString(Keys.EVENT_NAME)
         if (eventName.isBlank()) return
-        val eventData = json.optJSONObject(Keys.EVENT_PROPERTIES)?.convertToMap() ?: emptyMap<String, Any>()
+        val eventData = json.optJSONObject(Keys.EVENT_PROPERTIES)?.convertToMap()
         fullStoryInstance.logEvent(eventName, eventData)
     }
 
@@ -111,7 +113,7 @@ class FullStoryRemoteCommand(
     internal fun splitCommands(payload: JSONObject): Array<String> {
         val command = payload.optString(Commands.COMMAND_KEY, "")
         return command.split(Commands.SEPARATOR).map {
-            it.trim().lowercase()
+            it.trim().lowercase(Locale.ROOT)
         }.toTypedArray()
     }
 

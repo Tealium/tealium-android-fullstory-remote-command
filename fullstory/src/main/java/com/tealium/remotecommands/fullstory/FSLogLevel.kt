@@ -1,8 +1,9 @@
 package com.tealium.remotecommands.fullstory
 
 import com.fullstory.FS
+import java.util.Locale
 
-internal fun String.toFSLogLevel(): FS.LogLevel? = when (lowercase()) {
+internal fun String.toFSLogLevel(): FS.LogLevel? = when (lowercase(Locale.ROOT)) {
     "log",     "fslog_log"     -> FS.LogLevel.LOG
     "error",   "fslog_error"   -> FS.LogLevel.ERROR
     "warn", "warning", "fslog_warning" -> FS.LogLevel.WARN
